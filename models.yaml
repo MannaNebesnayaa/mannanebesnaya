@@ -1,0 +1,124 @@
+components:
+  schemas: 
+    FeedbackResponse:
+      type: object
+      properties:
+        feedbackTrigger:
+          type: boolean
+          required: true
+          example: true
+        orderId:
+          nullable: true
+          type: integer
+          example: 4
+        dishes:
+          type: array
+          nullable: true
+          items:
+            $ref: "models.yaml#/components/schemas/Dish"
+        feedbackParameters:
+          type: array
+          items:
+            $ref: "models.yaml#/components/schemas/FeedbackParameter"
+    
+    Dish: 
+      type: object
+      properties:
+        dishId:
+          type: integer
+          example: 4
+        dishImageURL:
+          type: string
+          example: https://i.insider.com/602ee9d81a89f20019a377c6?width=1136&format=jpeg
+        dishName:
+          type: string
+          example: Воппер Джуниор
+
+    FeedbackParameter: 
+      type: object
+      properties:
+        parameterId:
+          type: integer
+          example: 4
+        parameterName:
+          type: string
+          example: Температура
+        parameterType:
+          type: string
+          description: >
+            Тип вопроса:
+            string - Свободный ответ
+            integer - Оценка от 0 до 5
+            boolean - Вопрос с вариантом ответа да/нет
+          enum: [string, integer, boolean]
+          example: string
+    
+
+    FeedbackRequest:
+      type: object
+      description:  ОС от гостя по всему заказу
+      properties:
+        orderId:
+          type: integer
+          example: 4
+        feedbackByProducts:
+          type: array
+          items:
+            $ref:  "models.yaml#/components/schemas/FeedbackByProduct"
+    
+    FeedbackByProduct:
+      type: object
+      description:  ОС от гостя по одному продукту
+      properties:
+        dishId:
+          type: integer
+          example: 4
+        parameters:
+          type: array
+          items:
+            $ref:  "models.yaml#/components/schemas/FeedbackParameterResult"
+    
+    FeedbackParameterResponse: 
+      oneOf:
+        -  "models.yaml#/components/schemas/StringResult"
+        -  "models.yaml#/components/schemas/IntegerResult"
+        -  "models.yaml#/components/schemas/BoolResult"
+      
+    StringResult:
+      type: object
+      properties:
+        parameterId:
+          type: integer
+          example: 4
+        parameterName:
+          type: string
+          example: Комментарий
+        parametersResult:
+          type: string
+          example: Холодная картошка
+
+    IntegerResult:
+      type: object
+      properties:
+        parameterId:
+          type: integer
+          example: 2
+        parameterName:
+          type: string
+          example: Вкус
+        parametersResult:
+          type: integer
+          example: 1
+    
+    BoolResult:
+      type: object
+      properties:
+        parameterId:
+          type: integer
+          example: 4
+        parameterName:
+          type: string
+          example: Закажете еще?
+        parametersResult:
+          type: boolean
+          example: true

@@ -1,126 +1,45 @@
-swagger: "2.0"
+openapi: "3.0.2"
 info:
-  version: "1.0.0"
-  title: API для метрик
-  description: API для получения результатов метрик с возможностью фильтрации.
+  title: "Love Republic API"
+  version: "1.0.1"
+  description: Product Feedback API
 
-paths:
-  /metrics:
-    get:
-      summary: Получить результаты метрик с фильтрами
-      description: >
-        Возвращает результаты метрик с возможностью фильтрации по идентификаторам метрик, диапазону дат, идентификатору проекта
-        и идентификатору сотрудника.
-      parameters:
-        - name: metric_ids
-          in: query
-          description: Идентификаторы метрик для фильтрации, может быть несколько (разделяются запятой, например, "1,2,3").
-          required: false
-          type: string
-        - name: start_date
-          in: query
-          description: Дата начала диапазона для фильтрации (в формате "YYYY-MM-DD").
-          required: false
-          type: string
-        - name: end_date
-          in: query
-          description: Дата конца диапазона для фильтрации (в формате "YYYY-MM-DD").
-          required: false
-          type: string
-        - name: project_id
-          in: query
-          description: Идентификатор проекта для фильтрации, может быть несколько (разделяются запятой, например, "1,2,3").
-          required: false
-          type: integer
-        - name: employee_id
-          in: query
-          description: Идентификатор сотрудника для фильтрации, может быть несколько (разделяются запятой, например, "1,2,3").
-          required: false
-          type: integer
-        - name: platform_id
-          in: query
-          description: Идентификатор платформы для фильтрации, может быть несколько (разделяются запятой, например, "1,2,3").
-          required: false
-          type: integer
-        - name: department_id
-          in: query
-          description: Идентификатор отдела для фильтрации, может быть несколько (разделяются запятой, например, "1,2,3").
-          required: false
-          type: integer
-      responses:
-        200:
-          description: Успешный запрос. Возвращает результаты метрик.
-          schema:
-            type: array
-            items:
-              $ref: "#/components/schemas/MetricResults"
-        400:
-          description: Некорректный запрос. Возвращает сообщение об ошибке.
+servers:
+- url: https://test.ru
+  description: Test server
 
 components:
-  schemas:
-    Employee:
-      description: Cущность сотрудника
-      type: object
-      properties:
-        employeeId:
-          type: integer
-          description: Уникальный идентификатор сотрудника.
-        employeeName:
-          type: string
-          description: ФИО/никнейм сотрудника.
-        departmentId:
-          type: string
-          description: Уникальный идентификатор отдела.
-        departmentName:
-          type: string
-          description: Название отдела сотрудника.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
 
-    MetricEntry:
-      type: object
-      description: Cущность одной записи значения какой-либо метрики
-      properties:
-        id:
-          type: integer
-          description: Уникальный идентификатор метрики.
-        value:
-          type: number
-          description: Числовое значение метрики.
-        platformId:
-          type: string
-          description: ID платформы, из которой получено значение метрики.
-        dateReceived:
-          type: string
-          format: date
-          description: Дата получения значения метрики.
-
-    MetricResults:
-      description: Массив записей результатов
-      type: array
-      required: true
-      items:
-        $ref: "/components/schemas/MetricResult"
-
-    MetricResult:
-      type: object
-      description: Cущность результатов метрики
-      properties:
-        metricId:
-          type: integer
-          description: Идентификатор метрики.
-        metricName:
-          type: string
-          description: Название метрики.
-        employeeId:
-          type: integer
-          description: Идентификатор сотрудника.
-        employeeName:
-          type: string
-          description: ФИО/никнейм сотрудника.
-        dateRecorded:
-          type: string
-          format: date
-          description: Дата фиксации результата метрики.
-        platformId:
-          type: string
-          description: Платформа, из которой получена метрика.
+ 
+paths:
+  /app/feedback:
+    get:
+      summary: Запрос на проверку триггера показа ОС и получение параметров для формы ОС
+      responses:
+        200:
+          description: Успешный ответ с данными для главной страницы приложения
+          content:
+            application/json:
+              schema:
+                $ref: "models.yaml#/components/schemas/FeedbackResponse"
+    post:
+      summary: Submit product feedback
+      description: Submit a new product feedback entry
+      requestBody:
+        description: "Тело запроса"
+        content:
+          application/json:
+            schema:
+              $ref: "models.yaml#/components/schemas/FeedbackRequest"
+      responses:
+        200:
+          description: Feedback submitted successfully
+        400:
+          description: Invalid request
+        500:
+          description: Internal server error
