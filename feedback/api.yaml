@@ -1,12 +1,19 @@
 openapi: "3.0.2"
 info:
-  title: "Feedback BK API"
+  title: "Love Republic API"
   version: "1.0.1"
-  description: Product Feedback API
+  description: Документ содержит описание API электронных подарочных сертификатов в приложении "Love Republic"
 
 servers:
-- url: https://test.ru
+- url: https://apitest.loverepublic.ru
   description: Test server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
 
 paths:
   /app/feedback:
@@ -18,7 +25,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FeedbackResponse"
+                $ref: "models.yaml#/components/schemas/FeedbackResponse"
+  
+  /app/feedback/product:
     post:
       summary: Submit product feedback
       description: Submit a new product feedback entry
@@ -45,127 +54,5 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FeedbackRequest"
+                $ref: "models.yaml#/components/schemas/FeedbackRequest"
 
-components:
-  schemas: 
-    FeedbackResponse:
-      type: object
-      properties:
-        feedbackTrigger:
-          type: boolean
-          example: true
-        orderId:
-          nullable: true
-          type: integer
-          example: 4
-        dishes:
-          type: array
-          nullable: true
-          items:
-            $ref: "#/components/schemas/Dish"
-        feedbackParameters:
-          type: array
-          items:
-            $ref: "models.yaml#/components/schemas/FeedbackParameter"
-    
-    Dish: 
-      type: object
-      properties:
-        dishId:
-          type: integer
-          example: 4
-        dichCode:
-          description: код продукта для аналитики, можем сразу не понадобиться, на развитие
-          type: integer
-        dishImageURL:
-          type: string
-          example: https://i.insider.com/602ee9d81a89f20019a377c6?width=1136&format=jpeg
-          description: only file name 
-        dishName:
-          type: string
-          example: Воппер Джуниор
-
-    FeedbackParameter: 
-      type: object
-      properties:
-        parameterId:
-          type: integer
-          example: 4
-        parameterName:
-          type: string
-          example: Температура
-        parameterType:
-          type: string
-          description: >
-            Тип вопроса:
-            string - Свободный ответ
-            integer - Оценка от 0 до 5
-            boolean - Вопрос с вариантом ответа да/нет
-          enum: [string, integer, boolean]
-          example: string
-    
-
-
-    FeedbackRequest: 
-      type: object
-      description:  "ОС от гостя по всему заказу добавить параметра для явного обозначения feedback: false"
-      properties:
-        orderId:
-          type: integer
-          example: 4
-        feedbackByProducts:
-          type: array
-          items:
-            $ref:  "models.yaml#/components/schemas/FeedbackByProduct"
-    
-    FeedbackByProduct:
-      type: object
-      description:  ОС от гостя по одному продукту
-      properties:
-        dishId:
-          type: integer
-          example: 4
-        dishCode:
-          type: integer
-          example: 4
-        parameters:
-          type: array
-          items:
-            $ref:  "models.yaml#/components/schemas/FeedbackParameterResult"
-
-    FeedbackParameterResponse: 
-      oneOf:
-        - $ref: "#/components/schemas/StringResult"
-        - $ref: "#/components/schemas/IntegerResult"
-        - $ref: "#/components/schemas/BoolResult"
-      
-    StringResult:
-      type: object
-      properties:
-        parameterId:
-          type: integer
-          example: 4
-        parametersResult:
-          type: string
-          example: Холодная картошка
-
-    IntegerResult:
-      type: object
-      properties:
-        parameterId:
-          type: integer
-          example: 2
-        parametersResult:
-          type: integer
-          example: 1
-    
-    BoolResult:
-      type: object
-      properties:
-        parameterId:
-          type: integer
-          example: 4
-        parametersResult:
-          type: boolean
-          example: true
