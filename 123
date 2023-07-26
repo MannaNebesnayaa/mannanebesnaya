@@ -1,3 +1,61 @@
+openapi: "3.0.2"
+info:
+  title: "Love Republic API"
+  version: "1.0.1"
+  description: Документ содержит описание API электронных подарочных сертификатов в приложении "Love Republic"
+
+servers:
+- url: https://apitest.loverepublic.ru
+  description: Test server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT 
+
+paths:
+  /app/feedback:
+    get:
+      summary: Запрос на проверку триггера показа ОС и получение параметров для формы ОС
+      responses:
+        200:
+          description: Успешный ответ с данными для главной страницы приложения
+          content:
+            application/json:
+              schema:
+                $ref: "models.yaml#/components/schemas/FeedbackResponse"
+  
+  /app/feedback/product:
+    post:
+      summary: Submit product feedback
+      description: Submit a new product feedback entry
+      requestBody:
+        description: "Тело запроса"
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FeedbackRequest"
+      responses:
+        200:
+          description: Feedback submitted successfully
+        400:
+          description: Invalid request
+        500:
+          description: Internal server error
+    
+  /app/feedback/list:
+    get:
+      summary: Запрос на получение триггеров по всем заказам
+      responses:
+        200:
+          description: Успешный ответ с данными по каждому заказу
+          content:
+            application/json:
+              schema:
+                $ref: "models.yaml#/components/schemas/FeedbackRequest"
+
 components:
   schemas: 
     FeedbackResponse:
@@ -18,7 +76,6 @@ components:
             $ref: "models.yaml#/components/schemas/Dish"
         feedbackParameters:
           type: array
-          nullable: true
           items:
             $ref: "models.yaml#/components/schemas/FeedbackParameter"
     
@@ -28,7 +85,7 @@ components:
         dishId:
           type: integer
           example: 4
-        dishCode:
+        dichCode:
           description: код продукта для аналитики, можем сразу не понадобиться, на развитие
           type: integer
         dishImageURL:
@@ -86,12 +143,12 @@ components:
           type: array
           items:
             $ref:  "models.yaml#/components/schemas/FeedbackParameterResult"
-    
+
     FeedbackParameterResponse: 
       oneOf:
-        - $ref: "models.yaml#/components/schemas/StringResult"
-        - $ref: "models.yaml#/components/schemas/IntegerResult"
-        - $ref: "models.yaml#/components/schemas/BoolResult"
+        -  "models.yaml#/components/schemas/StringResult"
+        -  "models.yaml#/components/schemas/IntegerResult"
+        -  "models.yaml#/components/schemas/BoolResult"
       
     StringResult:
       type: object
