@@ -27,9 +27,13 @@ components:
         dishId:
           type: integer
           example: 4
+        dichCode:
+          description: код продукта для аналитики, можем сразу не понадобиться, на развитие
+          type: integer
         dishImageURL:
           type: string
           example: https://i.insider.com/602ee9d81a89f20019a377c6?width=1136&format=jpeg
+          description: only file name 
         dishName:
           type: string
           example: Воппер Джуниор
@@ -53,8 +57,9 @@ components:
           enum: [string, integer, boolean]
           example: string
     
+|// добавить параметра для явного обозначения feedback: false
 
-    FeedbackRequest:
+    FeedbackRequest: 
       type: object
       description:  ОС от гостя по всему заказу
       properties:
@@ -73,11 +78,14 @@ components:
         dishId:
           type: integer
           example: 4
+        dishCode:
+          type: integer
+          example: 4
         parameters:
           type: array
           items:
             $ref:  "models.yaml#/components/schemas/FeedbackParameterResult"
-    
+    \
     FeedbackParameterResponse: 
       oneOf:
         -  "models.yaml#/components/schemas/StringResult"
@@ -90,9 +98,6 @@ components:
         parameterId:
           type: integer
           example: 4
-        parameterName:
-          type: string
-          example: Комментарий
         parametersResult:
           type: string
           example: Холодная картошка
@@ -103,9 +108,6 @@ components:
         parameterId:
           type: integer
           example: 2
-        parameterName:
-          type: string
-          example: Вкус
         parametersResult:
           type: integer
           example: 1
@@ -116,9 +118,6 @@ components:
         parameterId:
           type: integer
           example: 4
-        parameterName:
-          type: string
-          example: Закажете еще?
         parametersResult:
           type: boolean
           example: true

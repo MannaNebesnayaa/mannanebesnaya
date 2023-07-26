@@ -43,3 +43,14 @@ paths:
           description: Invalid request
         500:
           description: Internal server error
+    
+  /app/feedback/list:
+    get:
+      summary: Запрос на получение триггеров по всем заказам
+      responses:
+        200:
+          description: Успешный ответ с данными по каждому заказу
+          content:
+            application/json:
+              schema:
+                
