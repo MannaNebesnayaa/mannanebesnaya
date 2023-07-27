@@ -19,6 +19,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FeedbackResponse"
+        404:
+          description: Заказы с фидбэком отсутствуют / Нет заказов
   
   /app/feedback/product:
     post:
@@ -47,6 +49,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/FeedbackListResponse"
+        404:
+          description: Заказы с фидбэком отсутствуют / Нет заказов
 
 components:
   schemas: 
