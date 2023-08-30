@@ -183,14 +183,11 @@ components:
           example: true
           
     FeedbackListResponse:
-      type: array
-      description:  Список заказов с необходимостью показать форму ОС
-      items:
-        type: object
-        properties:
-          feedbackTrigger:
-            type: boolean
-            example: true
-          orderId:
-            type: integer
-            example: 4
+1
+2
+3
+4
+5
+6
+7
+8
